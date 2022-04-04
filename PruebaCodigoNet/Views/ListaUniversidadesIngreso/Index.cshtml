@@ -1,0 +1,268 @@
+﻿<br />
+<br />
+<br />
+<br />
+
+@using (Html.BeginForm())
+{
+
+    using (Html.DevExtreme().ValidationGroup())
+    {
+
+        @Html.AntiForgeryToken()
+
+        @(Html.DevExtreme().Form<universidades.shared.Universidade>()
+            .ShowValidationSummary(true)
+            .Items(items => {
+
+                items.AddGroup()
+                    .Caption("Universidad")
+                    .Items(groupItems => {
+
+                        groupItems.AddSimpleFor(m => m.Country)
+                     .Editor(e => e.DropDownBox()
+                      .ID("pais")
+
+             .DisplayExpr(new JS("gridBox_displayExpr2"))
+             .DataSource(d => d.Mvc()
+                 .Controller("ListaUniversidades")
+                 .LoadAction("SearchUniCountry")
+                 .LoadMode(DataSourceLoadMode.Raw)
+                 .Key("Name")
+             )
+             .Placeholder("Seleccione Pais")
+             .ShowClearButton(true)
+             .OnValueChanged("gridBox_valueChanged2")
+             .ContentTemplate(new TemplateName("EmbeddedDataGridSingle2"))
+
+                     );
+
+
+                        groupItems.AddSimpleFor(m => m.Name)
+                         .Editor(e => e.TextBox()
+                         .ID("nombre")
+                         .OnValueChanged("temporal")
+                          );
+
+
+
+
+
+                        groupItems.AddSimpleFor(m => m.AlphaTwoCode)
+                        .Editor(e => e.TextBox()
+                       .ID("CodigoRegional")
+                       .OnValueChanged("temporal")
+                            );
+
+                        groupItems.AddSimpleFor(m => m.Domains)
+                       .Editor(e => e.TextBox()
+                       .ID("Dominio")
+                       .OnValueChanged("temporal")
+                           );
+
+                        groupItems.AddSimpleFor(m => m.WebPages)
+                        .Editor(e => e.TextBox()
+                        .ID("Web")
+                        .OnValueChanged("temporal")
+                           );
+
+
+                        groupItems.AddSimpleFor(m => m.Imagen)
+                     .Editor(e => e.TextBox()
+                     .ID("Imagen")
+                     .OnValueChanged("temporal")
+                    
+                        );
+
+
+
+
+                    });
+
+
+
+
+                items.AddButton()
+
+                    .HorizontalAlignment(HorizontalAlignment.Left)
+                    .ButtonOptions(b => b.Text("Guardar")
+                        .Type(ButtonType.Success)
+
+                        .UseSubmitBehavior(true)
+                        .OnClick("mensaje")
+
+                );
+
+            })
+            .FormData(Model)
+
+        )
+
+
+
+    }
+
+    @using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridSingle2"))
+    {
+        @(Html.DevExtreme().DataGrid()
+        .ID("embedded-datagrid2")
+        .DataSource(new JS(@"component.getDataSource()"))
+        .HoverStateEnabled(true)
+        .Paging(p => p.PageSize(10))
+        .FilterRow(f => f.Visible(true))
+        .Scrolling(s => s.Mode(GridScrollingMode.Virtual))
+        .Height(345)
+        .Selection(s => s.Mode(SelectionMode.Single))
+        .SelectedRowKeys(new JS(@"component.option(""value"") ? [component.option(""value"")] : []"))
+        .OnSelectionChanged(@<text>
+            function(selectedItems) {
+                var keys = selectedItems.selectedRowKeys;
+                component.option("value", keys);
+                component.close();
+            }
+        </text>)
+    )
+    }
+
+
+
+
+}
+
+<form method="post" asp-controller="ListaUniversidadesIngreso" asp-action="Cargarjson" enctype="multipart/form-data">
+
+    <h3>Sube Json</h3>
+
+
+
+
+    <div id="fileuploader-container">
+        @(Html.DevExtreme().FileUploader()
+            .Name("txtjson")
+            .SelectButtonText("Select json")
+            .LabelText("")
+            .Accept("json/*")
+            .UploadMode(FileUploadMode.UseForm)
+        )
+    </div>
+    @(Html.DevExtreme().Button()
+        .ID("button")
+        .Text("Subir")
+        .Type(ButtonType.Success)
+        .UseSubmitBehavior(true)
+        .OnClick("mensaje")
+    )
+
+</form>
+
+
+
+    <h3>Sube Imagen</h3>
+
+    <div id="fileuploader-container">
+        <input type="file" id="file" accept="image/*" onchange="mostrar()" />
+  
+    </div>
+
+
+
+
+
+
+<script>
+
+
+
+    async function mostrar() {
+        const file = document.getElementById("file").files[0];
+        
+
+        $("#Imagen").dxTextBox("instance").option('value', await toBase64(file));
+       
+    }
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+
+    $(function () {
+        var datos = JSON.parse(window.localStorage.getItem('respaldo'));
+        $("#pais").dxDropDownBox("instance").option('value', datos.pais);
+        $("#nombre").dxTextBox("instance").option('value', datos.nombre);
+        $("#CodigoRegional").dxTextBox("instance").option('value', datos.CodigoRegional);
+        $("#Dominio").dxTextBox("instance").option('value', datos.Dominio);
+        $("#Web").dxTextBox("instance").option('value', datos.Web);
+        $("#Imagen").dxTextBox("instance").option('value', datos.Imagen);
+
+    });
+    function gridBox_valueChanged2(e) {
+        var $dataGrid = $("#embedded-datagrid2");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+
+    }
+
+    function gridBox_displayExpr2(item) {
+        try {
+            temporal();
+        } catch (error) {
+            console.error(error);
+
+        }
+
+
+        return item.Name;
+    }
+
+    function temporal() {
+        try {
+            window.localStorage.removeItem('respaldo');
+            var pais = $("#pais").dxDropDownBox("instance").option('value');
+            var nombre = $("#nombre").dxTextBox("instance").option('value');
+
+            var CodigoRegional = $("#CodigoRegional").dxTextBox("instance").option('value');
+            var Dominio = $("#Dominio").dxTextBox("instance").option('value');
+            var Web = $("#Web").dxTextBox("instance").option('value');
+            var Imagen = $("#Imagen").dxTextBox("instance").option('value');
+
+
+
+
+
+        } catch (error) {
+            console.error(error);
+
+        }
+
+        const datos = {
+            pais: pais,
+            nombre: nombre,
+            CodigoRegional: CodigoRegional,
+            nombre: nombre,
+            CodigoRegional: CodigoRegional,
+            Dominio: Dominio,
+            Web: Web,
+            Imagen: Imagen
+        }
+
+        window.localStorage.setItem('respaldo', JSON.stringify(datos));
+
+    }
+
+    function mensaje() {
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Guardando',
+            showConfirmButton: false,
+            timer: 1500
+        })
+        window.localStorage.removeItem('respaldo');
+    }
+</script>

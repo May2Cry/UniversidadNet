@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32228.343
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PruebaCodigoNet", "PruebaCodigoNet\PruebaCodigoNet.csproj", "{A4586B3F-BB8C-4A2C-A402-4F52277433EC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "universidades.shared", "universidades.shared\universidades.shared.csproj", "{5C38F165-FC97-4FB6-AC46-943A88053F56}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4586B3F-BB8C-4A2C-A402-4F52277433EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4586B3F-BB8C-4A2C-A402-4F52277433EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4586B3F-BB8C-4A2C-A402-4F52277433EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4586B3F-BB8C-4A2C-A402-4F52277433EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C38F165-FC97-4FB6-AC46-943A88053F56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C38F165-FC97-4FB6-AC46-943A88053F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C38F165-FC97-4FB6-AC46-943A88053F56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C38F165-FC97-4FB6-AC46-943A88053F56}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E9B87225-5FC7-40B9-8DA0-2B8AC07BEB33}
+	EndGlobalSection
+EndGlobal

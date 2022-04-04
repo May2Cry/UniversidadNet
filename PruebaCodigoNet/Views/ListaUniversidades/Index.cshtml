@@ -1,0 +1,229 @@
+﻿<h2>Consulta las Universidades de Todos Los Paises</h2>
+<div>
+
+
+    <div class="row my-2">
+        <div class="col-md-4">
+            Seleccione Pais :
+        </div>
+        <div class="col-md-4">
+            @(Html.DevExtreme().DropDownBox()
+                    .ID("pais")
+
+             .DisplayExpr(new JS("gridBox_displayExpr2"))
+             .DataSource(d => d.Mvc()
+                 .Controller("ListaUniversidades")
+                 .LoadAction("SearchUniCountry")
+                 .LoadMode(DataSourceLoadMode.Raw)
+                 .Key("Name")
+
+             )
+             .Placeholder("Seleccione Pais")
+             .ShowClearButton(true)
+             .OnValueChanged("gridBox_valueChanged2")
+             .ContentTemplate(new TemplateName("EmbeddedDataGridSingle2"))
+                )
+        </div>
+        <div class="col-md-8">
+            @(Html.DevExtreme().Button()
+        .ID("Buscar")
+        .Text("Buscar")
+        .Type(ButtonType.Normal)
+        .OnClick("OnclickBuscar")
+    )
+          
+        </div>
+    </div>
+</div>
+
+
+@using (Html.DevExtreme().NamedTemplate("EmbeddedDataGridSingle2"))
+{
+    @(Html.DevExtreme().DataGrid()
+        .ID("embedded-datagrid2")
+        .DataSource(new JS(@"component.getDataSource()"))
+        .HoverStateEnabled(true)
+        .Paging(p => p.PageSize(10))
+        .FilterRow(f => f.Visible(true))
+        .Scrolling(s => s.Mode(GridScrollingMode.Virtual))
+        .Height(345)
+        .Selection(s => s.Mode(SelectionMode.Single))
+        .SelectedRowKeys(new JS(@"component.option(""value"") ? [component.option(""value"")] : []"))
+        .OnSelectionChanged(@<text>
+            function(selectedItems) {
+                var keys = selectedItems.selectedRowKeys;
+                component.option("value", keys);
+                component.close();
+            }
+        </text>)
+    )
+}
+
+
+@(Html.DevExtreme().LoadPanel()
+        .ID("loadPanel")
+        .Position(p => p.Of("#gridContainer"))
+        .Visible(false)
+)
+@(Html.DevExtreme().DataGrid<Models.Universidades>()
+    .ID("gridContainer")
+    .ShowBorders(true)
+    .RepaintChangesOnly(true)
+    .LoadPanel(loadPanel => loadPanel.Enabled(false))
+     .AllowColumnResizing(true)
+                                            .ColumnAutoWidth(true)
+                                                .AllowColumnReordering(true)
+                                            .AllowColumnResizing(true)
+                                             .SearchPanel(searchPanel => searchPanel
+                                            .Visible(true)
+
+                                            .Width(240)
+                                            .Placeholder("Busqueda"))
+
+                                              .Columns(columns =>
+                                              {
+                                                  columns.AddFor(m => m.Name).Caption("Universidad");
+                                                  columns.AddFor(m => m.Domains).Caption("Dominio");
+                                                  columns.AddFor(m => m.web_pages).Caption("Pagina Web");
+                                                  columns.AddFor(m => m.Imagen).Caption("Imagen");
+                                                  columns.AddFor(m => m.favorito).DataType(GridColumnDataType.Boolean);
+
+
+
+
+                                              })
+                                              .HoverStateEnabled(true)
+                                             .ShowBorders(true)
+    .Scrolling(scrolling => scrolling.RowRenderingMode(GridRowRenderingMode.Virtual))
+    .Paging(paging => paging.PageSize(10))
+    .Pager(pager =>
+    {
+        pager.Visible(true);
+        pager.ShowPageSizeSelector(true);
+        pager.AllowedPageSizes(new JS("[5, 10, 50]"));
+        pager.ShowInfo(true);
+        pager.ShowNavigationButtons(true);
+    })
+     .Selection(s => s.Mode(SelectionMode.Single))
+    .FilterRow(f => f.Visible(true))
+
+
+                                        .OnSelectionChanged( @<text>
+
+                                            function selection_changed(selectedItems) {
+                                                var data = selectedItems.selectedRowsData[0];
+                                                if (data) {
+                                                       AgregarProducto(data)
+                                                    component.close();
+                                                }
+                                            }
+                                        </text>)
+
+)
+
+
+<script>
+    var dataGrid, loadPanel;
+
+
+
+
+    function gridBox_valueChanged2(e) {
+        var $dataGrid = $("#embedded-datagrid2");
+
+        if ($dataGrid.length) {
+            var dataGrid = $dataGrid.dxDataGrid("instance");
+            dataGrid.selectRows(e.value, false);
+        }
+    }
+
+    function gridBox_displayExpr2(item) {
+        return item.Name;
+    }
+
+function OnclickBuscar() {
+        dataGrid = $("#gridContainer").dxDataGrid("instance");
+        loadPanel = $("#loadPanel").dxLoadPanel("instance");
+        var paiss = $("#pais").dxDropDownBox("instance").option('value');
+    var pais = String(paiss);
+    loadPanel.show();
+
+    sendRequest('@Url.RouteUrl(new { controller = "ListaUniversidades", action = "ConsultaPais", skip = 0 })', "GET", { Pais: pais, })
+            .always(() => { loadPanel.hide(); })
+            .done((data) => {
+                dataGrid.option("pager.displayMode", "compact");
+                dataGrid.option("dataSource", data);
+            });
+    }
+
+
+    function sendRequest(url, method, data) {
+        var d = $.Deferred();
+
+        method = method || "GET";
+
+        $.ajax(url, {
+            method: method,
+            data: data,
+            cache: false,
+            xhrFields: { withCredentials: true }
+        }).done(function (result) {
+            d.resolve(method === "GET" ? result.data : result);
+        }).fail(function (xhr) {
+            d.reject(xhr.responseJSON ? xhr.responseJSON.Message : xhr.statusText);
+        });
+
+        return d.promise();
+    };
+
+
+
+    AgregarProducto = (Producto) => {
+
+        if (Producto.favorito == false) {
+            Producto.favorito = true;
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Añadido a Favorito',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        } else {
+            Producto.favorito = false;
+            Swal.fire({
+                position: 'top-end',
+                icon: 'danger',
+                title: 'Quitado de Favorito',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            storage.removeItem(favoritos);
+        }
+
+
+        sendRequest('@Url.RouteUrl(new { controller = "ListaUniversidades", action = "Ingresar", skip = 0 })', "GET", { nombre: Producto.Name, country: Producto.Country, web_pages: Producto.web_pages.toString(), Domains: Producto.Domains.toString(), Imagen: Producto.Imagen, favorito: Producto.favorito})
+        .done((data) => {
+
+        });
+        window.localStorage.setItem("favoritos", JSON.stringify(Producto));
+
+          dataGrid = $("#gridContainer").dxDataGrid("instance");
+        loadPanel = $("#loadPanel").dxLoadPanel("instance");
+        var paiss = $("#pais").dxDropDownBox("instance").option('value');
+    var pais = String(paiss);
+    loadPanel.show();
+
+    sendRequest('@Url.RouteUrl(new { controller = "ListaUniversidades", action = "ConsultaPais", skip = 0 })', "GET", { Pais: pais, })
+            .always(() => { loadPanel.hide(); })
+            .done((data) => {
+                dataGrid.option("pager.displayMode", "compact");
+                dataGrid.option("dataSource", data);
+            });
+
+}
+
+
+
+
+</script>

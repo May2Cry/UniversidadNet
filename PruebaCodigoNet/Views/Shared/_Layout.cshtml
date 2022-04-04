@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Universidades .Net</title>
+
+
+    @* Uncomment to use the HtmlEditor control *@
+    @* <script src="https://unpkg.com/devextreme-quill/dist/dx-quill.min.js"></script> *@
+    <link rel="stylesheet" href="~/css/vendor.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Site.css" />
+    <script src="~/js/vendor.js" asp-append-version="true"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    
+    <!-- DevExtreme-Intl module -->
+    <script src="https://unpkg.com/devextreme-intl@17.2/dist/devextreme-intl.min.js"></script>
+    <!-- Dictionary files for German and Russian languages -->
+    <script src="https://cdn3.devexpress.com/jslib/17.2.18/js/localization/dx.messages.es.js"></script>
+
+
+    <!-- Favicons -->
+    <link href="~/assets/img/favicon.png" rel="icon">
+    <link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700|Open+Sans:300,300i,400,400i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="~/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="~/assets/css/style.css" rel="stylesheet">
+</head>
+
+<body style="padding-top: 5rem;">
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center ">
+        <div class="container d-flex justify-content-between align-items-center">
+
+            <div id="logo">
+                <h1><a href="index.html">Avilon</a></h1>
+                <!-- Uncomment below if you prefer to use an image logo -->
+                <!-- <a href="index.html"><img src="assets/img/logo.png" alt=""></a> -->
+            </div>
+
+            <nav id="navbar" class="navbar">
+                <ul>
+                    <li><a class="nav-link scrollto active" asp-controller="Home" asp-action="Index">Favoritos</a></li>
+                    <li><a class="nav-link scrollto" asp-controller="ListaUniversidades" asp-action="Index">Busqueda</a></li>
+                    <li><a class="nav-link scrollto" asp-controller="ListaUniversidadesIngreso" asp-action="Index">Agregar</a></li>
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav><!-- .navbar -->
+        </div>
+    </header><!-- End Header -->
+    <!-- ======= Hero Section ======= -->
+    <section id="hero">
+
+        <main id="main" role="main" class="container">
+            @RenderBody()
+        </main>
+
+
+    </section><!-- End Hero Section -->
+
+ 
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 text-lg-start text-center">
+                    <div class="copyright">
+                        &copy; Copyright <strong>Avilon</strong>. All Rights Reserved
+                    </div>
+                 
+                </div>
+                <div class="col-lg-6">
+                    <nav class="footer-links text-lg-right text-center pt-2 pt-lg-0">
+                        <a asp-controller="Home" asp-action="Index" class="scrollto">Home</a>
+                        <a asp-controller="ListaUniversidades" asp-action="Index" class="scrollto">Busqueda</a>
+                        <a asp-controller="ListaUniversidadesIngreso" asp-action="Index"  class="scrollto">Agregar</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </footer><!-- End  Footer -->
+
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-chevron-up"></i></a>
+
+
+    <script>
+        DevExpress.localization.locale(navigator.language || navigator.browserLanguage);
+    </script>
+    <script src="~/js/favorito.js"></script>
+
+
+    <!-- Vendor JS Files -->
+    <script src="~/assets/vendor/aos/aos.js"></script>
+    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/vendor/glightbox/js/glightbox.min.js"></script>
+    <script src="~/assets/vendor/php-email-form/validate.js"></script>
+
+    <!-- Template Main JS File -->
+    <script src="~/assets/js/main.js"></script>
+</body>
+
+</html>
